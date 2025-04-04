@@ -1,3 +1,21 @@
+console.log(exam4);
+const exam4 = await ExamManager.getExam(3);
+console.log(exam3)
+const exam3 = await ExamManager.getExam(2);
+console.log(exam2);
+const exam2 = await ExamManager.getExam(1);
+console.log(exam1);
+const exam1 = await ExamManager.getExam(0);
+await ExamManager.createExam("Computer Science Exam", now + 14400, 9000, "QmCSExam123");
+await ExamManager.createExam("Chemistry Quiz", now + 10800, 3600, "QmChemQuiz123");
+await ExamManager.createExam("Physics Midterm", now + 7200, 5400, "QmPhysicsMid123");
+await ExamManager.createExam("Math Final", now + 3600, 7200, "QmMathFinal123");
+let ExamManager = await ethers.getContractAt("ExamManager", "0x9663E937ECcac24f5ddFBf58464Ba84A360958dA");
+await examManager.createExam("Computer Science Exam", now + 14400, 9000, "QmCSExam123");
+await examManager.createExam("Chemistry Quiz", now + 10800, 3600, "QmChemQuiz123");
+await examManager.createExam("Physics Midterm", now + 7200, 5400, "QmPhysicsMid123");
+await examManager.createExam("Math Final", now + 3600, 7200, "QmMathFinal123");
+const now = Math.floor(Date.now() / 1000);
 console.log(student);
 const student = await StudentRegistry.getStudent("0x16D753c6635819905A37b44e1483Ab6a0a20c470");
 let StudentRegistry = await ethers.getContractAt("StudentRegistry", "0xD1A34aD16c607DC009288Fa27DC64cB75F4Fda54");
