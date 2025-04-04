@@ -8,36 +8,23 @@ import (
 
 	"github.com/avinashgarlaa/blockchain-exam-backend/config"
 	"github.com/avinashgarlaa/blockchain-exam-backend/routes"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Load environment variables from .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("❌ Error loading .env file")
-	}
-
-	// Test print to verify keys are loaded
-	fmt.Println("🔑 PINATA_API_KEY:", os.Getenv("PINATA_API_KEY"))
-	fmt.Println("🔐 PINATA_SECRET_API_KEY:", os.Getenv("PINATA_SECRET_API_KEY"))
-
-	// Connect to QuickNode Ethereum
+	// Connect to QuickNode
 	client := config.ConnectQuickNode()
 	defer client.Close()
 
 	fmt.Println("✅ Connected to QuickNode")
-
 	// Setup Routes
 	routes.SetupExamRoutes()
 
-	// ✅ Use dynamic port for Render
+	// Get PORT from environment (Render requires this)
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // default for local dev
+		port = "8080" // fallback for local dev
 	}
 
-	// Start HTTP server
 	fmt.Println("🚀 Server is running on http://localhost:" + port)
-	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, nil)) // ✅ Important for Render
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
