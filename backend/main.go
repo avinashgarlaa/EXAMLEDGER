@@ -31,8 +31,13 @@ func main() {
 	// Setup Routes
 	routes.SetupExamRoutes()
 
+	// ✅ Use dynamic port for Render
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080" // default for local dev
+	}
+
 	// Start HTTP server
-	port := ":8080"
-	fmt.Println("🚀 Server is running on http://localhost" + port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	fmt.Println("🚀 Server is running on http://localhost:" + port)
+	log.Fatal(http.ListenAndServe("0.0.0.0:"+port, nil)) // ✅ Important for Render
 }
