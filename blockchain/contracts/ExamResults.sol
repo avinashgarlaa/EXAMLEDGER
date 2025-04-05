@@ -38,27 +38,23 @@ contract ExamResults {
         examSubmission = IExamSubmission(_examSubmission);
     }
 
-    function submitResult(address _student, uint _examId, uint _score, string memory _ipfsHash) external onlyAdmin {
-        require(bytes(_ipfsHash).length > 0, "Invalid IPFS Hash");
+   function submitResult(address _student, uint _examId, uint _score, uint _totalMarks, string memory _ipfsHash) external onlyAdmin {
+    // Optional: You can still keep a basic IPFS check if you want
+    require(bytes(_ipfsHash).length > 0, "Invalid IPFS Hash");
 
-        (, uint totalMarks) = examManager.getExam(_examId);
-        require(totalMarks > 0, "Exam does not exist");
+    studentResults[_student][_examId] = Result({
+        examId: _examId,
+        score: _score,
+        totalMarks: _totalMarks,
+        timestamp: block.timestamp,
+        ipfsHash: _ipfsHash
+    });
 
-        string memory submissionIPFS = examSubmission.getSubmission(_student, _examId);
-        require(bytes(submissionIPFS).length > 0, "No submission found");
+    studentExamIds[_student].push(_examId);
 
-        studentResults[_student][_examId] = Result({
-            examId: _examId,
-            score: _score,
-            totalMarks: totalMarks,
-            timestamp: block.timestamp,
-            ipfsHash: _ipfsHash
-        });
+    emit ResultPublished(_student, _examId, _score, _totalMarks);
+}
 
-        studentExamIds[_student].push(_examId);
-
-        emit ResultPublished(_student, _examId, _score, totalMarks);
-    }
 
     function getAllResults(address _student) external view returns (Result[] memory) {
         uint examCount = studentExamIds[_student].length;

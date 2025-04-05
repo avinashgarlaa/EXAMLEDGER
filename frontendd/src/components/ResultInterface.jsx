@@ -1,23 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { ethers } from 'ethers';
 
 // Update with your deployed contract address
-const EXAM_RESULTS_ADDRESS = "0xA4116462CCA2091A0AfD943b7306de4Dac97d172";
+const EXAM_RESULTS_ADDRESS = "0x984fd5Df38749D5538Fa32cCEd5aF6e1C47c23B8";
 
 const ExamResultsABI = [
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_examManager",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_examSubmission",
-        "type": "address"
-      }
+      { "internalType": "address", "name": "_examManager", "type": "address" },
+      { "internalType": "address", "name": "_examSubmission", "type": "address" }
     ],
     "stateMutability": "nonpayable",
     "type": "constructor"
@@ -25,143 +17,52 @@ const ExamResultsABI = [
   {
     "inputs": [],
     "name": "admin",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_student",
-        "type": "address"
-      }
-    ],
+    "inputs": [{ "internalType": "address", "name": "_student", "type": "address" }],
     "name": "getAllResults",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "examId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "score",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "totalMarks",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "timestamp",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "ipfsHash",
-            "type": "string"
-          }
-        ],
-        "internalType": "struct ExamResults.Result[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
+    "outputs": [{
+      "components": [
+        { "internalType": "uint256", "name": "examId", "type": "uint256" },
+        { "internalType": "uint256", "name": "score", "type": "uint256" },
+        { "internalType": "uint256", "name": "totalMarks", "type": "uint256" },
+        { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
+        { "internalType": "string", "name": "ipfsHash", "type": "string" }
+      ],
+      "internalType": "struct ExamResults.Result[]",
+      "name": "",
+      "type": "tuple[]"
+    }],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "examManager",
-    "outputs": [
-      {
-        "internalType": "contract IExamManager",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "examSubmission",
-    "outputs": [
-      {
-        "internalType": "contract IExamSubmission",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "_student",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_examId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_score",
-        "type": "uint256"
-      },
-      {
-        "internalType": "string",
-        "name": "_ipfsHash",
-        "type": "string"
-      }
-    ],
-    "name": "submitResult",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   }
 ];
 
 function ResultInterface({ exam, onBack }) {
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    fetchResults();
-  }, []);
+  const [showResult, setShowResult] = useState(false);
 
   const fetchResults = async () => {
+    setLoading(true);
+    setError('');
     try {
       if (!window.ethereum) {
-        throw new Error('Please install MetaMask');
+        throw new Error('MetaMask is not installed');
       }
 
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
       const contract = new ethers.Contract(EXAM_RESULTS_ADDRESS, ExamResultsABI, signer);
-      
+
       const studentAddress = await signer.getAddress();
       const examResults = await contract.getAllResults(studentAddress);
-      
-      // Filter results for the current exam
       const examResult = examResults.find(result => result.examId.toString() === exam.id.toString());
-      
+
       if (examResult) {
         setResults([{
           examId: examResult.examId.toString(),
@@ -170,22 +71,17 @@ function ResultInterface({ exam, onBack }) {
           timestamp: new Date(examResult.timestamp * 1000).toLocaleString(),
           ipfsHash: examResult.ipfsHash
         }]);
+      } else {
+        setError('Result has not been declared yet.');
       }
-    } catch (error) {
-      console.error('Error fetching results:', error);
-      setError('Failed to fetch exam results');
+    } catch (err) {
+      console.error('Error fetching results:', err.message);
+      setError('Result has not been declared yet.');
     } finally {
       setLoading(false);
+      setShowResult(true);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-8">
@@ -202,15 +98,33 @@ function ResultInterface({ exam, onBack }) {
           </div>
         </div>
 
-        {error && (
-          <div className="mb-4 p-3 rounded-lg bg-red-100 text-red-700 text-sm">
-            {error}
+        {!showResult ? (
+          <div className="text-center">
+            <button
+              onClick={fetchResults}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              View Result
+            </button>
           </div>
-        )}
-
-        {results.length === 0 ? (
-          <div className="text-center p-8">
-            <p className="text-gray-600">No results available yet.</p>
+        ) : loading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center space-y-4">
+            <div className="p-4 bg-yellow-100 text-yellow-700 rounded-lg">
+              {error}
+            </div>
+            <button
+              onClick={() => {
+                setShowResult(false);
+                setError('');
+              }}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+            >
+              Try Again
+            </button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -243,7 +157,7 @@ function ResultInterface({ exam, onBack }) {
                 <div className="mt-4">
                   <p className="text-sm text-gray-600 mb-2">Detailed Feedback</p>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-gray-800">
+                    <p className="text-gray-800 break-words">
                       Detailed feedback is available on IPFS: {result.ipfsHash}
                     </p>
                   </div>
@@ -257,4 +171,4 @@ function ResultInterface({ exam, onBack }) {
   );
 }
 
-export default ResultInterface; 
+export default ResultInterface;

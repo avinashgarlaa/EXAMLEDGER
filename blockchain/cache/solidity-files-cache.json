@@ -76,8 +76,8 @@
       ]
     },
     "/Users/avinash/ExamLedger/blockchain/contracts/RegisterStudent.sol": {
-      "lastModificationDate": 1743533929969,
-      "contentHash": "8228ff8a9832dba7d739c5a1e238d820",
+      "lastModificationDate": 1743881987091,
+      "contentHash": "3698ec5bfd38c93ade0e424533353c55",
       "sourceName": "contracts/RegisterStudent.sol",
       "solcConfig": {
         "version": "0.8.28",
@@ -112,8 +112,8 @@
       ]
     },
     "/Users/avinash/ExamLedger/blockchain/contracts/ExamResults.sol": {
-      "lastModificationDate": 1743659933310,
-      "contentHash": "d37230d4ae7ed0bd97b0561fd56f4159",
+      "lastModificationDate": 1743888785833,
+      "contentHash": "83d6303557c268154fd6dfc6027452fb",
       "sourceName": "contracts/ExamResults.sol",
       "solcConfig": {
         "version": "0.8.28",

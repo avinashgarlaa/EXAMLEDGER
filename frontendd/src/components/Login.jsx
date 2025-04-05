@@ -133,7 +133,7 @@ function Login({ onLogin }) {
         <StudentRegistration onSubmit={handleRegistrationSubmit} />
       ) : (
         <>
-          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Welcome to DecentralExam</h2>
+          <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Welcome to ExamLedger</h2>
           
           <div className="flex justify-center space-x-4 mb-8">
             <button
@@ -201,7 +201,7 @@ function Login({ onLogin }) {
                         ? 'border-green-500 focus:border-green-500' 
                         : 'border-gray-300 focus:border-indigo-500'
                     }`}
-                    placeholder="Enter wallet address or connect MetaMask"
+                    placeholder="Enter wallet address"
                   />
                   <button
                     type="button"

@@ -14,6 +14,7 @@ contract StudentRegistry {
 
     event StudentRegistered(address indexed student, string name, string rollNo, string ipfsHash);
     event StudentUpdated(address indexed student, string name, string rollNo, string ipfsHash);
+    event StudentDeleted(address indexed student);
 
     modifier onlyAdmin() {
         require(msg.sender == admin, "Only admin can perform this action");
@@ -56,5 +57,11 @@ contract StudentRegistry {
     ) public onlyAdmin onlyRegisteredStudent(_student) {
         students[_student] = Student(_name, _rollNo, _ipfsHash);
         emit StudentUpdated(_student, _name, _rollNo, _ipfsHash);
+    }
+
+    // Student can delete their own record
+    function deleteStudent() public onlyRegisteredStudent(msg.sender) {
+        delete students[msg.sender];
+        emit StudentDeleted(msg.sender);
     }
 }
