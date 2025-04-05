@@ -1,3 +1,24 @@
+await ExamSubmissionManager.getSubmission(0,"0xFD47e16d5CcB1Bc93bDb8ECF8fB14BACbb373EF6");
+const result2 = await ExamResults.submitResult("0xFD47e16d5CcB1Bc93bDb8ECF8fB14BACbb373EF6",0,2,"avianshresulthash");
+const result = await ExamResults.submitResult("0xFD47e16d5CcB1Bc93bDb8ECF8fB14BACbb373EF6",0,2,"avianshresulthash");
+await ExamResults.submitResult("0xFD47e16d5CcB1Bc93bDb8ECF8fB14BACbb373EF6",0,2,"avianshresulthash");
+);
+  "avianshresulthash"                           // IPFS hash
+  2,                                            // score
+  0,                                            // examId
+  "0xFD47e16d5CcB1Bc93bDb8ECF8fB14BACbb373EF6", // student
+await ExamResults.submitResult(
+ let ExamResults = await ethers.getContractAt("ExamResults", "0xA4116462CCA2091A0AfD943b7306de4Dac97d172");
+await ExamSubmissionManager.submitResult("0xFD47e16d5CcB1Bc93bDb8ECF8fB14BACbb373EF6",0,2,"avianshresulthash");
+ let ExamSubmissionManager = await ethers.getContractAt("ExamSubmissionManager", "0xA4116462CCA2091A0AfD943b7306de4Dac97d172");
+await ExamManager.getExam(0);
+await ExamManager.activateExam(0);
+await ExamManager.getExam(0);
+await ExamManager.activateExam(0);
+await ExamManager.getExam(0);
+await ExamManager.createExam("Blockchain-Exam 1" , Math.floor(Date.now() / 1000) + 60, 120 , "QmezUXg9ToV7Pc3H9XdtLV96fGQJzjAUmkQRLEDvpFrC6y");
+let ExamManager = await ethers.getContractAt("ExamManager", "0xEBB7376B1D6084243519BFA9c1067F1Ff5EB3C11");
+.exit
 await ExamSubmissionManager.getAllSubmissionsForExam(0);
 await getAllSubmissionsForExam(0);
 let ExamSubmissionManager = await ethers.getContractAt("ExamSubmissionManager", "0x07ffA3Ed385Ad7Ee8B26eBe2F01c620d03985BD0");

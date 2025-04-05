@@ -4,7 +4,7 @@ import { User, Mail, Phone, Calendar, Hash } from "lucide-react";
 import ExamSelectionFromBlockchain from "./ExamSelection";
 import ExamSelection from "./ExamSelection";
 
-const CONTRACT_ADDRESS = "0x190bFc0c1ff046d142a23FbFcaa69955e79AD673"; // 🔴 Your contract address
+const CONTRACT_ADDRESS = "0x7b08Fb7a84d509180f2879EECc3d42c421588935"; // 🔴 Your contract address
 const ABI = [
   {
     "inputs": [],

@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import ResultInterface from './ResultInterface';
 
 // Update with your deployed contract address
-const EXAM_SUBMISSION_ADDRESS = "0x07ffA3Ed385Ad7Ee8B26eBe2F01c620d03985BD0";
+const EXAM_SUBMISSION_ADDRESS = "0x5A8D1297c6125CD5F7fF10038035AE440ce9718d";
 
 const ExamSubmissionABI = [
   {

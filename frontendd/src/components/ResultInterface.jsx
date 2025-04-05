@@ -3,7 +3,7 @@ import { ArrowLeft, CheckCircle, XCircle } from 'lucide-react';
 import { ethers } from 'ethers';
 
 // Update with your deployed contract address
-const EXAM_RESULTS_ADDRESS = "YOUR_EXAM_RESULTS_CONTRACT_ADDRESS";
+const EXAM_RESULTS_ADDRESS = "0xA4116462CCA2091A0AfD943b7306de4Dac97d172";
 
 const ExamResultsABI = [
   {

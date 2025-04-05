@@ -482,7 +482,7 @@ import ExamInterface from "./ExamInterface";
 
 
 // Update this with your deployed contract address on Holesky
-const contractAddress = "0x35833a2Ba1F7EE8d5F140464842A6C479abD0699";
+const contractAddress = "0xEBB7376B1D6084243519BFA9c1067F1Ff5EB3C11";
 
 // Holesky network configuration
 const NETWORK_CONFIG = {
