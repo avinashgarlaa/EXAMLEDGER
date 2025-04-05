@@ -1,3 +1,13 @@
+console.log(ExamManager2);
+const ExamManager2 = await ethers.getContractFactory("ExamManager");
+const ExamManager = await ethers.getContractFactory("ExamManager");
+console.log("Contract deployed to:", examManager.address);
+await examManager.deployed();
+const examManager = await ExamManager.deploy();
+const ExamManager = await ethers.getContractFactory("ExamManager");
+console.log(student2);
+const student2 = await StudentRegistry.getStudent("0xB34983410Bccf1256eb29D6302b5e41Ae96ef810");
+const student = await StudentRegistry.getStudent("0xB34983410Bccf1256eb29D6302b5e41Ae96ef810");
 console.log(exam4);
 const exam4 = await ExamManager.getExam(3);
 console.log(exam3)
