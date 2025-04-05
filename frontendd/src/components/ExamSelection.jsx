@@ -66,6 +66,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Calculator, Code, Beaker, CloudCog } from "lucide-react";
 import { ethers } from "ethers";
+import ExamInterface from "./ExamInterface";
 
 
 
@@ -479,7 +480,22 @@ import { ethers } from "ethers";
   }
 ];
 
-const contractAddress = "0x28EA4cAcdA035f295272474F18838c95bCB1A6fB";
+
+// Update this with your deployed contract address on Holesky
+const contractAddress = "0x35833a2Ba1F7EE8d5F140464842A6C479abD0699";
+
+// Holesky network configuration
+const NETWORK_CONFIG = {
+  chainId: "0x4268", // Holesky chain ID
+  chainName: "Holesky",
+  nativeCurrency: {
+    name: "ETH",
+    symbol: "ETH",
+    decimals: 18
+  },
+  rpcUrls: ["https://spring-shy-voice.ethereum-holesky.quiknode.pro/97efd17afa07e578c0e82a454a041d7442826404"],
+  blockExplorerUrls: ["https://holesky.etherscan.io"]
+};
 
 const iconMap = {
   mathematics: Calculator,
@@ -487,55 +503,166 @@ const iconMap = {
   science: Beaker,
 };
 
-const ExamSelection = () => {
+const ExamSelection = ({ onSelectExam }) => {
   const [exams, setExams] = useState([]);
-  const navigate = useNavigate();
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchExams();
   }, []);
 
-  const fetchExams = async () => {
+  const switchToHolesky = async () => {
     try {
+      await window.ethereum.request({
+        method: 'wallet_addEthereumChain',
+        params: [NETWORK_CONFIG]
+      });
+    } catch (error) {
+      console.error('Error switching to Holesky:', error);
+      throw new Error('Failed to switch to Holesky network');
+    }
+  };
+
+  const fetchExams = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      // Check if MetaMask is installed
+      if (!window.ethereum) {
+        throw new Error('Please install MetaMask to use this application');
+      }
+
+      // Request account access
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+
+      // Check if we're on the correct network
+      const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+      if (chainId !== NETWORK_CONFIG.chainId) {
+        await switchToHolesky();
+      }
+
+      // Create provider and signer
       const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const contract = new ethers.Contract(contractAddress, ExamManagerABI, provider);
+      const signer = provider.getSigner();
+      
+      // Get the connected account
+      const account = await signer.getAddress();
+      console.log('Connected account:', account);
 
+      // Create contract instance
+      const contract = new ethers.Contract(contractAddress, ExamManagerABI, signer);
+      console.log('Contract instance created');
+
+      // Get total number of exams
       const totalExams = await contract.nextExamId();
+      console.log('Total exams:', totalExams.toString());
+
       const examList = [];
-      console.log(examList)
 
+      // Fetch each exam
       for (let i = 0; i < totalExams; i++) {
-        const exam = await contract.getExam(i);
-        console.log(exam)
-        const [name, date, duration, admin, isActivated, ipfsHash] = exam;
+        try {
+          console.log(`Fetching exam ${i}...`);
+          const exam = await contract.getExam(i);
+          const [name, date, duration, admin, isActivated, ipfsHash] = exam;
+          console.log(`Exam ${i} data:`, { name, date, duration, admin, isActivated, ipfsHash });
 
-        if (isActivated) {
-          examList.push({
-            id: i,
-            name,
-            date: Number(date),
-            duration: Number(duration),
-            admin,
-            ipfsHash,
-            subjectId: name.toLowerCase().includes("math")
-              ? "mathematics"
-              : name.toLowerCase().includes("program")
-              ? "programming"
-              : "science",
-          });
+          if (isActivated) {
+            examList.push({
+              id: i,
+              name,
+              date: Number(date),
+              duration: Number(duration),
+              admin,
+              ipfsHash,
+              subjectId: name.toLowerCase().includes("math")
+                ? "mathematics"
+                : name.toLowerCase().includes("program")
+                ? "programming"
+                : "science",
+            });
+          }
+        } catch (examError) {
+          console.error(`Error fetching exam ${i}:`, examError);
+          continue;
         }
       }
 
+      console.log('Final exam list:', examList);
       setExams(examList);
+
+      if (examList.length === 0) {
+        setError('No active exams found. Please check back later.');
+      }
     } catch (error) {
-      console.error("Failed to fetch exams:", error);
+      console.error('Error in fetchExams:', error);
+      setError(`Failed to fetch exams: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
-  console.log("examaslist", exams)
 
-  const handleExamClick = (examId) => {
-    navigate(`/exam/${examId}`); // Adjust route as per your router setup
+  const handleExamClick = async (exam) => {
+    try {
+      console.log("IPFS Hash:", exam.ipfsHash);
+      
+      if (!exam.ipfsHash) {
+        throw new Error("No IPFS hash found for this exam");
+      }
+
+      const response = await fetch(`https://ipfs.io/ipfs/${exam.ipfsHash}`);
+      console.log("Response status:", response.status);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch from IPFS: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("IPFS Response:", data);
+
+      if (!data || (!Array.isArray(data) && !data.questions)) {
+        throw new Error("Invalid question format from IPFS");
+      }
+
+      // Get questions from the response
+      const questions = Array.isArray(data) ? data : data.questions;
+
+      // Validate each question has required fields
+      const validatedQuestions = questions.map((q, index) => {
+        if (!q.question || !Array.isArray(q.options) || q.options.length === 0) {
+          throw new Error(`Invalid question format at index ${index}`);
+        }
+        return {
+          id: q.id || index,
+          question: q.question,
+          options: q.options,
+          correct: q.correct
+        };
+      });
+
+      const examWithQuestions = {
+        ...exam,
+        questions: validatedQuestions
+      };
+
+      console.log("Processed exam with questions:", examWithQuestions);
+      setSelectedExam(examWithQuestions);
+    } catch (error) {
+      console.error("Error fetching exam questions:", error);
+      setError(`Failed to load exam questions: ${error.message}`);
+    }
   };
+
+  if (selectedExam) {
+    return (
+      <ExamInterface 
+        exam={selectedExam}
+        onBack={() => setSelectedExam(null)}
+      />
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -544,14 +671,34 @@ const ExamSelection = () => {
         <p className="mt-2 text-gray-600">Click on a subject to begin the test</p>
       </div>
 
+      {error && (
+        <div className="p-4 bg-red-100 text-red-700 rounded-lg">
+          {error}
+        </div>
+      )}
+
+      {loading && (
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+          <p className="mt-2 text-gray-600">Loading exams...</p>
+        </div>
+      )}
+
+      {!loading && exams.length === 0 && !error && (
+        <div className="text-center p-4 bg-yellow-100 text-yellow-700 rounded-lg">
+          No exams available at the moment.
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {exams.map((exam) => {
           const Icon = iconMap[exam.subjectId] || Beaker;
           return (
             <button
               key={exam.id}
-              onClick={() => handleExamClick(exam.id)}
-              className="bg-white rounded-xl shadow-md p-6 transition-transform hover:scale-105 hover:shadow-lg"
+              onClick={() => handleExamClick(exam)}
+              disabled={loading}
+              className="bg-white rounded-xl shadow-md p-6 transition-transform hover:scale-105 hover:shadow-lg disabled:opacity-50"
             >
               <div className="flex flex-col items-center text-center">
                 <div className="p-3 bg-indigo-100 rounded-full">

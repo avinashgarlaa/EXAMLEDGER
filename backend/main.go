@@ -22,7 +22,7 @@ func main() {
 	// Get PORT from environment (Render requires this)
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080" // fallback for local dev
+		port = "9090" // fallback for local dev
 	}
 
 	fmt.Println("🚀 Server is running on http://localhost:" + port)
