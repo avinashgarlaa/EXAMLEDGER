@@ -1,3 +1,14 @@
+await ExamManager.activateExam(0);
+console.log(exam);
+const exam = await ExamManager.getExam(0);
+await ExamManager.createExam("Blockchain-Exam 1" , Math.floor(Date.now() / 1000) + 60, 120 ,"QmezUXg9ToV7Pc3H9XdtLV96fGQJzjAUmkQRLEDvpFrC6y");
+let ExamManager = await ethers.getContractAt("ExamManager", "0x28EA4cAcdA035f295272474F18838c95bCB1A6fB");
+.exit
+await ExamManager.activateExam(0);
+console.log(exam);
+const exam = await ExamManager.getExam(0);
+await ExamManager.createExam("Blockchain-Exam 1" , Math.floor(Date.now() / 1000) + 60, 120 ,"QmezUXg9ToV7Pc3H9XdtLV96fGQJzjAUmkQRLEDvpFrC6y");
+let ExamManager = await ethers.getContractAt("ExamManager", "0x605634Aa5A2044153A32aBd6ebC650A3eE68544b");
 .exit
 console.log(exam1);
 const exam1 = await ExamManager.getExam(0);

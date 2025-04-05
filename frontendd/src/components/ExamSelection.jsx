@@ -479,7 +479,7 @@ import { ethers } from "ethers";
   }
 ];
 
-const contractAddress = "0x502beB8a3227c35268a3f52c1C17e4dAC0D260F3";
+const contractAddress = "0x28EA4cAcdA035f295272474F18838c95bCB1A6fB";
 
 const iconMap = {
   mathematics: Calculator,
@@ -506,7 +506,7 @@ const ExamSelection = () => {
 
       for (let i = 0; i < totalExams; i++) {
         const exam = await contract.getExam(i);
-
+        console.log(exam)
         const [name, date, duration, admin, isActivated, ipfsHash] = exam;
 
         if (isActivated) {
@@ -531,6 +531,7 @@ const ExamSelection = () => {
       console.error("Failed to fetch exams:", error);
     }
   };
+  console.log("examaslist", exams)
 
   const handleExamClick = (examId) => {
     navigate(`/exam/${examId}`); // Adjust route as per your router setup
