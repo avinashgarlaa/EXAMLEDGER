@@ -1,10 +1,10 @@
-console.log(ExamManager2);
-const ExamManager2 = await ethers.getContractFactory("ExamManager");
-const ExamManager = await ethers.getContractFactory("ExamManager");
-console.log("Contract deployed to:", examManager.address);
-await examManager.deployed();
-const examManager = await ExamManager.deploy();
-const ExamManager = await ethers.getContractFactory("ExamManager");
+.exit
+console.log(exam1);
+const exam1 = await ExamManager.getExam(0);
+await ExamManager.createExam("Blockchain-Exam" , Math.floor(Date.now() / 1000) + 60, 120 , "QmezUXg9ToV7Pc3H9XdtLV96fGQJzjAUmkQRLEDvpFrC6y");
+let ExamManager = await ethers.getContractAt("ExamManager", "0x502beB8a3227c35268a3f52c1C17e4dAC0D260F3");
+et ExamManager = await ethers.getContractAt("ExamManager", "0x502beB8a3227c35268a3f52c1C17e4dAC0D260F3");
+.exit
 console.log(student2);
 const student2 = await StudentRegistry.getStudent("0xB34983410Bccf1256eb29D6302b5e41Ae96ef810");
 const student = await StudentRegistry.getStudent("0xB34983410Bccf1256eb29D6302b5e41Ae96ef810");
@@ -170,6 +170,9 @@ const exam = await ExamManager.getExam(0)
 const ExamManager = await ethers.getContractAt("ExamManager", "0xE91EeB3AE8Bc235e53764Eb202364f1Be4C63B76");
 .exit
 const ExamManager = await ethers.getContractAt("ExamManager", "0xE91EeB3AE8Bc235e53764Eb202364f1Be4C63B76");
+const ExamSubmissionManager = await ethers.getContractAt("ExamSubmissionManager", "0x4371Bc46eF52dB0Ad8ba2308db821585468D3B0f");
+const StudentRegistry = await ethers.getContractAt("StudentRegistry", "0x240D439Dd46bF075bf680356B293703508Becd98");
+const ExamManager = await ethers.getContractAt("ExamManager", "0xE91EeB3AE8Bc235e53764Eb202364f1Be4C63B76");63B76");
 const ExamSubmissionManager = await ethers.getContractAt("ExamSubmissionManager", "0x4371Bc46eF52dB0Ad8ba2308db821585468D3B0f");
 const StudentRegistry = await ethers.getContractAt("StudentRegistry", "0x240D439Dd46bF075bf680356B293703508Becd98");
 const ExamManager = await ethers.getContractAt("ExamManager", "0xE91EeB3AE8Bc235e53764Eb202364f1Be4C63B76");

@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { ethers } from "ethers";
 import { User, Mail, Phone, Calendar, Hash } from "lucide-react";
+import ExamSelectionFromBlockchain from "./ExamSelection";
+import ExamSelection from "./ExamSelection";
 
-const CONTRACT_ADDRESS = "0xD1A34aD16c607DC009288Fa27DC64cB75F4Fda54"; // 🔴 Your contract address
+const CONTRACT_ADDRESS = "0xFd481B7EB221cfc24C4a7cE2ce69888A6D52f04a"; // 🔴 Your contract address
 const ABI = [
   {
     "inputs": [],
@@ -206,6 +208,7 @@ function StudentRegistration() {
   const [loading, setLoading] = useState(false);
   const [account, setAccount] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isRegistered, setIsRegistered] = useState(false);
 
   // 🟢 Handle Input Changes
   const handleChange = (e) => {
@@ -261,7 +264,9 @@ function StudentRegistration() {
       const tx = await contract.registerStudent(formData.name, formData.rollNo, ipfsHash);
       await tx.wait(); // Wait for transaction confirmation
 
+
       alert("✅ Student Registered Successfully!");
+      setIsRegistered(true);
       setFormData({ name: "", rollNo: "", email: "", phone: "", dob: "" }); // Reset form
     } catch (error) {
       console.error("Registration failed:", error);
@@ -271,6 +276,9 @@ function StudentRegistration() {
     }
   };
 
+    if (isRegistered) {
+      return <ExamSelection />;
+    }
   return (
     <div className="bg-white rounded-lg shadow-xl p-8 max-w-md mx-auto">
       <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Complete Your Registration</h2>

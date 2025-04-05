@@ -64,7 +64,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Calculator, Code, Beaker } from "lucide-react";
+import { Calculator, Code, Beaker, CloudCog } from "lucide-react";
 import { ethers } from "ethers";
 
 
@@ -479,7 +479,7 @@ import { ethers } from "ethers";
   }
 ];
 
-const contractAddress = "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266";
+const contractAddress = "0x502beB8a3227c35268a3f52c1C17e4dAC0D260F3";
 
 const iconMap = {
   mathematics: Calculator,
@@ -487,7 +487,7 @@ const iconMap = {
   science: Beaker,
 };
 
-const ExamSelectionFromBlockchain = () => {
+const ExamSelection = () => {
   const [exams, setExams] = useState([]);
   const navigate = useNavigate();
 
@@ -502,6 +502,7 @@ const ExamSelectionFromBlockchain = () => {
 
       const totalExams = await contract.nextExamId();
       const examList = [];
+      console.log(examList)
 
       for (let i = 0; i < totalExams; i++) {
         const exam = await contract.getExam(i);
@@ -568,4 +569,4 @@ const ExamSelectionFromBlockchain = () => {
   );
 };
 
-export default ExamSelectionFromBlockchain;
+export default ExamSelection;
